@@ -16,6 +16,9 @@
 
 #include <EGL/eglext.h>
 
+typedef struct _XDisplay *GLXDisplay;
+typedef struct __GLXcontextRec *GLXContext;
+
 namespace NEO {
 // OpenGL API names
 typedef const GLubyte *(*PFNglGetString)(GLenum name);
@@ -47,13 +50,52 @@ class GLSharingFunctionsLinux : public GLSharingFunctions {
 
     // Gl functions
     int queryDeviceInfo(struct mesa_glinterop_device_info *out) {
-        return eglGLInteropQueryDeviceInfo(glHDCHandle, glHGLRCHandle, out);
+        switch (glHDCType) {
+        case CL_GLX_DISPLAY_KHR:
+            return glXGLInteropQueryDeviceInfo(
+                reinterpret_cast<GLXDisplay>(glHDCHandle),
+                reinterpret_cast<GLXContext>(glHGLRCHandle),
+                out);
+        case CL_EGL_DISPLAY_KHR:
+            return eglGLInteropQueryDeviceInfo(
+                reinterpret_cast<EGLDisplay>(glHDCHandle),
+                reinterpret_cast<EGLContext>(glHGLRCHandle),
+                out);
+        default:
+            return -ENOTSUP;
+        }
     }
     int exportObject(struct mesa_glinterop_export_in *in, struct mesa_glinterop_export_out *out) {
-        return eglGLInteropExportObject(glHDCHandle, glHGLRCHandle, in, out);
+        switch (glHDCType) {
+        case CL_GLX_DISPLAY_KHR:
+            return glXGLInteropExportObject(
+                reinterpret_cast<GLXDisplay>(glHDCHandle),
+                reinterpret_cast<GLXContext>(glHGLRCHandle),
+                in, out);
+        case CL_EGL_DISPLAY_KHR:
+            return eglGLInteropExportObject(
+                reinterpret_cast<EGLDisplay>(glHDCHandle),
+                reinterpret_cast<EGLContext>(glHGLRCHandle),
+                in, out);
+        default:
+            return -ENOTSUP;
+        }
     }
     int flushObjects(unsigned count, struct mesa_glinterop_export_in *resources, GLsync *sync) {
-        return eglGLInteropFlushObjects(glHDCHandle, glHGLRCHandle, count, resources, sync);
+        switch (glHDCType) {
+        case CL_GLX_DISPLAY_KHR:
+            return glXGLInteropFlushObjects(
+                reinterpret_cast<GLXDisplay>(glHDCHandle),
+                reinterpret_cast<GLXContext>(glHGLRCHandle),
+                count, resources, sync);
+        case CL_EGL_DISPLAY_KHR:
+            return eglGLInteropFlushObjects(
+                reinterpret_cast<EGLDisplay>(glHDCHandle),
+                reinterpret_cast<EGLContext>(glHGLRCHandle),
+                count, resources, sync);
+        default:
+            return -ENOTSUP;
+        }
     }
     GLContext getBackupContextHandle() {
         return glHGLRCHandleBkpCtx;
