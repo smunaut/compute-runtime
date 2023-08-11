@@ -80,17 +80,19 @@ void GlSharingBuilderFactory::fillGlobalDispatchTable() {
 }
 
 std::string GlSharingBuilderFactory::getExtensions(DriverInfo *driverInfo) {
-    if (DebugManager.flags.AddClGlSharing.get()) {
-        return "cl_khr_gl_sharing "
-               "cl_khr_gl_depth_images "
-               "cl_khr_gl_event "
-               "cl_khr_gl_msaa_sharing ";
-    } else if (GLSharingFunctionsLinux::isGlSharingEnabled()) {
+    auto isGlSharingEnabled = GLSharingFunctionsLinux::isGlSharingEnabled();
+
+    if (DebugManager.flags.AddClGlSharing.get() != -1) {
+        isGlSharingEnabled = DebugManager.flags.AddClGlSharing.get();
+    }
+
+    if (isGlSharingEnabled) {
         return "cl_khr_gl_sharing "
                "cl_khr_gl_depth_images "
                "cl_khr_gl_event "
                "cl_khr_gl_msaa_sharing ";
     }
+
     return "";
 }
 
