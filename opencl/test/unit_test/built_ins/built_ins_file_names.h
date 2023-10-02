@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 namespace NEO {
 std::vector<std::string> getBuiltInFileNames(bool imagesSupport);

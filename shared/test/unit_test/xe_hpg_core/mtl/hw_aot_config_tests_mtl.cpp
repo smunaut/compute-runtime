@@ -5,6 +5,7 @@
  *
  */
 
+#include <cstdint>
 #include "shared/test/common/xe_hpg_core/mtl/product_configs_mtl.h"
 #include "shared/test/unit_test/fixtures/product_config_fixture.h"
 

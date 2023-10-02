@@ -12,6 +12,7 @@
 #include <poll.h>
 #include <sys/stat.h>
 #include <vector>
+#include <cstdint>
 
 namespace NEO {
 namespace SysCalls {
