@@ -221,9 +221,10 @@ GraphicsAllocation *GlBuffer::createGraphicsAllocation(Context *context, unsigne
         } else {
             auto helper = context->getDevice(0)->getRootDeviceEnvironment().getGmmHelper();
             StorageInfo storageInfo = {};
+            GmmRequirements gmmRequirements{};
 
             graphicsAllocation->setDefaultGmm(new Gmm(helper,
-                                                      nullptr, bufferInfo.bufferSize, 1, GMM_RESOURCE_USAGE_UNKNOWN, false, storageInfo, false));
+                                                      nullptr, bufferInfo.bufferSize, 1, GMM_RESOURCE_USAGE_UNKNOWN, storageInfo,gmmRequirements));
         }
     }
 
