@@ -127,6 +127,10 @@ class GLSharingFunctionsLinux : public GLSharingFunctions {
     GLContext glHGLRCHandleBkpCtx = 0;
     GLDisplay glHDCHandle = 0;
 
+    // Readiness
+    bool glXLoaded = false;
+    bool eglLoaded = false;
+
     // GL functions
     PFNglGetString glGetString = nullptr;
     PFNglGetStringi glGetStringi = nullptr;
